@@ -1,5 +1,227 @@
 <!DOCTYPE>
-<html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrinho Digital - Sustentabilidade</title>
+    <style>
+        :root {
+            --verde-escuro: #2e7d32;
+            --verde-claro: #4caf50;
+            --fundo: #f1f8e9;
+            --texto: #333;
+            --branco: #ffffff;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--fundo);
+            color: var(--texto);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var (--branco);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--verde-escuro);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: var(--verde-claro);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--verde-escuro);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--verde-claro);
+        }
+
+        .resultado {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            border-left: 5px solid var(--verde-escuro);
+            display: none;
+        }
+
+        .resultado h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--verde-escuro);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .excelente { background-color: #2e7d32; }
+        .regular { background-color: #f57c00; }
+        .critico { background-color: #d32f2f; }
+        
+        .dica {
+            font-style: italic;
+            font-size: 13px;
+            color: #555;
+            margin-top: 10px;
+            background: #e8f5e9;
+            padding: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌾 Agrinho Digital</h1>
+    <div class="subtitle">Calculadora de Sustentabilidade Agrícola</div>
+
+    <div class="form-group">
+        <label for="aguaAplicada">Água aplicada na irrigação (Litros):</label>
+        <input type="number" id="aguaAplicada" placeholder="Ex: 1000" min="0">
+    </div>
+
+    <div class="form-group">
+        <label for="aguaUtilizada">Água aproveitada pela cultura (Litros):</label>
+        <input type="number" id="aguaUtilizada" placeholder="Ex: 800" min="0">
+    </div>
+
+    <div class="form-group">
+        <label for="diesel">Diesel gasto nos tratores (Litros):</label>
+        <input type="number" id="diesel" placeholder="Ex: 50" min="0">
+    </div>
+
+    <div class="form-group">
+        <label for="fertilizante">Fertilizantes nitrogenados (Kg):</label>
+        <input type="number" id="fertilizante" placeholder="Ex: 20" min="0">
+    </div>
+
+    <button onclick="calcularSustentabilidade()">Gerar Diagnóstico</button>
+
+    <div id="resultadoBox" class="resultado">
+        <h2>📊 Relatório de Impacto</h2>
+        <p><strong>Eficiência Hídrica:</strong> <span id="resAgua">0</span>%</p>
+        <div id="badgeAgua" class="status-badge"></div>
+        
+        <p style="margin-top: 15px;"><strong>Pegada de Carbono:</strong> <span id="resCarbono">0</span> kg de CO₂</p>
+        <div class="dica">
+            <strong>Dica Agrinho:</strong> <span id="resDica"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calcularSustentabilidade() {
+        // Captura dos valores inseridos
+        const aguaAplicada = parseFloat(document.getElementById('aguaAplicada').value) || 0;
+        const aguaUtilizada = parseFloat(document.getElementById('aguaUtilizada').value) || 0;
+        const diesel = parseFloat(document.getElementById('diesel').value) || 0;
+        const fertilizante = parseFloat(document.getElementById('fertilizante').value) || 0;
+
+        // Validação básica
+        if (aguaAplicada <= 0) {
+            alert("Por favor, insira uma quantidade válida de água aplicada.");
+            return;
+        }
+
+        // Lógica de cálculo
+        let eficienciaAgua = (aguaUtilizada / aguaAplicada) * 100;
+        if (eficienciaAgua > 100) eficienciaAgua = 100;
+
+        // Fatores de emissão: 1L diesel = 2.68kg CO2 | 1kg fert = 4.7kg CO2
+        const co2Total = (diesel * 2.68) + (fertilizante * 4.7);
+
+        // Atualizando a interface com os resultados
+        document.getElementById('resAgua').innerText = eficienciaAgua.toFixed(1);
+        document.getElementById('resCarbono').innerText = co2Total.toFixed(2);
+
+        // Customização do feedback da água
+        const badge = document.getElementById('badgeAgua');
+        if (eficienciaAgua >= 80) {
+            badge.innerText = "EXCELENTE: Uso consciente da água!";
+            badge.className = "status-badge excelente";
+        } else if (eficienciaAgua >= 50) {
+            badge.innerText = "REGULAR: Alerta para desperdícios.";
+            badge.className = "status-badge regular";
+        } else {
+            badge.innerText = "CRÍTICO: Necessário rever o sistema.";
+            badge.className = "status-badge critico";
+        }
+
+        // Dica dinâmica para o carbono
+        const dica = document.getElementById('resDica');
+        if (co2Total > 150) {
+            dica.innerText = "Emissões altas! Considere adotar o plantio direto e a rotação de culturas para regenerar o solo e reter carbono.";
+        } else {
+            dica.innerText = "Bom manejo! Continue monitorando os insumos e invista em reflorestamento de áreas degradadas para zerar o impacto.";
+        }
+
+        // Mostrar a caixa de resultados
+        document.getElementById('resultadoBox').style.display = 'block';
+    }
+</script>
+
+</body>
   
 </html>
